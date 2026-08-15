@@ -38,3 +38,6 @@ next-env.d.ts
 terraform.tfstate*
 
 /.wrangler
+
+# generated in CI from secret, never commit
+uptime.secret.ts
