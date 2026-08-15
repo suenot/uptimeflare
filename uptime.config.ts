@@ -43,6 +43,11 @@ const pageConfig: PageConfig = {
       'harness-analyzer-api',
       'sandbox-api',
       'arena',
+      'api-mm',
+      'realtime',
+      'content',
+      'events',
+      'pocket-api',
     ],
     Infra: ['gitlab', 'npm'],
     External: ['auth-a8e'],
@@ -84,6 +89,15 @@ const workerConfig: WorkerConfig = {
     { id: 'harness-analyzer-api', name: 'harness-analyzer-api.marketmaker.cc', method: 'GET', target: 'https://harness-analyzer-api.marketmaker.cc/api/status' },
     { id: 'sandbox-api', name: 'sandbox-api.marketmaker.cc', method: 'GET', target: 'https://sandbox-api.marketmaker.cc/readyz' },
     { id: 'arena', name: 'arena.marketmaker.cc', method: 'GET', target: 'https://arena.marketmaker.cc/api/v1/health' },
+
+    // ===== API (verify-at-deploy) =====
+    // Service alive but root has no route (uvicorn 404)
+    { id: 'api-mm', name: 'api.marketmaker.cc', method: 'GET', target: 'https://api.marketmaker.cc', expectedCodes: [200, 404] },
+    { id: 'realtime', name: 'realtime.marketmaker.cc', method: 'GET', target: 'https://realtime.marketmaker.cc', expectedCodes: [200, 404] },
+    { id: 'content', name: 'content.marketmaker.cc', method: 'GET', target: 'https://content.marketmaker.cc' },
+    { id: 'events', name: 'events.marketmaker.cc', method: 'GET', target: 'https://events.marketmaker.cc' },
+    // Behind auth gate: 401 = alive
+    { id: 'pocket-api', name: 'pocket-api.marketmaker.cc', method: 'GET', target: 'https://pocket-api.marketmaker.cc/health', expectedCodes: [200, 401] },
 
     // ===== Infra =====
     { id: 'gitlab', name: 'gitlab.marketmaker.cc', method: 'GET', target: 'https://gitlab.marketmaker.cc' },
