@@ -44,7 +44,7 @@ const pageConfig: PageConfig = {
       'sandbox-api',
       'arena',
     ],
-    Infra: ['gitlab', 'npm', 'cmdop'],
+    Infra: ['gitlab', 'npm'],
     External: ['auth-a8e'],
   },
 }
@@ -88,7 +88,6 @@ const workerConfig: WorkerConfig = {
     // ===== Infra =====
     { id: 'gitlab', name: 'gitlab.marketmaker.cc', method: 'GET', target: 'https://gitlab.marketmaker.cc' },
     { id: 'npm', name: 'npm.marketmaker.cc', method: 'GET', target: 'https://npm.marketmaker.cc/-/ping' },
-    { id: 'cmdop', name: 'cmdop.marketmaker.cc', method: 'GET', target: 'https://cmdop.marketmaker.cc/healthz/ready' },
 
     // ===== External =====
     { id: 'auth-a8e', name: 'auth.a8e.io', method: 'GET', target: 'https://auth.a8e.io/health' },
