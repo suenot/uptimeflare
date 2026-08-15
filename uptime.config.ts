@@ -92,6 +92,9 @@ const workerConfig: WorkerConfig = {
 
     // ===== External =====
     { id: 'auth-a8e', name: 'auth.a8e.io', method: 'GET', target: 'https://auth.a8e.io/health' },
+
+    // ===== temp: alert test =====
+    { id: 'alert-test', name: 'alert-test (remove me)', method: 'GET', target: 'https://alert-test-invalid.marketmaker.cc' },
   ],
   notification: {
     webhook: {
