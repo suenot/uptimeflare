@@ -1,14 +1,15 @@
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
 
 import { MonitorTarget } from '@/types/config'
 import { maintenances, pageConfig } from '@/uptime.config'
 import { Center, Text } from '@mantine/core'
-import MonitorDetail from '@/components/MonitorDetail'
 import { useTranslation } from 'react-i18next'
 import { CompactedMonitorStateWrapper, getFromStore } from '@/worker/src/store'
 import MarketMakerStatus from '@/components/MarketMakerStatus'
 
 export const runtime = 'experimental-edge'
+const MonitorDetail = dynamic(() => import('@/components/MonitorDetail'), { ssr: false })
 
 export default function Home({
   compactedStateStr,

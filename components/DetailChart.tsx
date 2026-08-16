@@ -29,11 +29,14 @@ ChartJS.register(
 export default function DetailChart({
   monitor,
   state,
+  appearance = 'default',
 }: {
   monitor: MonitorTarget
   state: MonitorState
+  appearance?: 'default' | 'status'
 }) {
   const { t } = useTranslation('common')
+  const statusAppearance = appearance === 'status'
   const latencyData = state.latency[monitor.id].map((point) => ({
     x: point.time * 1000,
     y: point.ping,
@@ -65,6 +68,11 @@ export default function DetailChart({
     },
     plugins: {
       tooltip: {
+        backgroundColor: statusAppearance ? '#101214' : undefined,
+        borderColor: statusAppearance ? '#1e2225' : undefined,
+        borderWidth: statusAppearance ? 1 : undefined,
+        titleColor: statusAppearance ? '#e7e9ea' : undefined,
+        bodyColor: statusAppearance ? '#e7e9ea' : undefined,
         callbacks: {
           label: (item: any) => {
             if (item.parsed.y) {
@@ -80,6 +88,7 @@ export default function DetailChart({
         display: true,
         text: t('Response times'),
         align: 'start' as const,
+        color: statusAppearance ? '#e7e9ea' : undefined,
       },
     },
     scales: {
@@ -89,7 +98,13 @@ export default function DetailChart({
           source: 'auto' as const,
           maxRotation: 0,
           autoSkip: true,
+          color: statusAppearance ? '#8b949e' : undefined,
         },
+        grid: { color: statusAppearance ? '#1e2225' : undefined },
+      },
+      y: {
+        ticks: { color: statusAppearance ? '#8b949e' : undefined },
+        grid: { color: statusAppearance ? '#1e2225' : undefined },
       },
     },
   }

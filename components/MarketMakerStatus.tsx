@@ -1,5 +1,6 @@
 import { MaintenanceConfig, MonitorState, MonitorTarget } from '@/types/config'
 import { pageConfig } from '@/uptime.config'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import styles from '@/styles/StatusPage.module.css'
@@ -8,6 +9,7 @@ type BarStatus = 'up' | 'down' | 'partial' | 'unknown'
 
 const DAY_SECONDS = 24 * 60 * 60
 const HISTORY_DAYS = 90
+const DetailChart = dynamic(() => import('@/components/DetailChart'), { ssr: false })
 
 function currentIncident(monitor: MonitorTarget, state: MonitorState) {
   const incidents = state.incident[monitor.id]
@@ -93,7 +95,7 @@ function MonitorRow({
     <article className={styles.row}>
       <div className={styles.name} title={monitor.tooltip}>
         <span className={`${styles.dot} ${styles[status]}`} aria-hidden="true" />
-        <a href={`#${monitor.id}`}>{monitor.name}</a>
+        <span>{monitor.name}</span>
       </div>
       <div className={styles.meta}>
         {uptime === null ? 'Awaiting data' : `${uptime.toFixed(2)}% uptime`}
@@ -113,6 +115,62 @@ function MonitorRow({
         <span>Today</span>
       </div>
     </article>
+  )
+}
+
+function ProjectGroup({
+  groupName,
+  groupMonitors,
+  state,
+  maintenances,
+  now,
+}: {
+  groupName: string
+  groupMonitors: MonitorTarget[]
+  state: MonitorState
+  maintenances: MaintenanceConfig[]
+  now: number
+}) {
+  const [chartsOpen, setChartsOpen] = useState(false)
+
+  return (
+    <section className={styles.group} aria-labelledby={`group-${groupName}`}>
+      <h2 id={`group-${groupName}`}>{groupName}</h2>
+      <div className={styles.card}>
+        {groupMonitors.map((monitor) => (
+          <MonitorRow
+            key={monitor.id}
+            monitor={monitor}
+            state={state}
+            maintenances={maintenances}
+            now={now}
+          />
+        ))}
+        <details
+          className={styles.charts}
+          onToggle={(event) => setChartsOpen((event.currentTarget as HTMLDetailsElement).open)}
+        >
+          <summary>
+            <span>Response-time charts</span>
+            <span>Last 12 hours</span>
+          </summary>
+          {chartsOpen && (
+            <div className={styles.chartGrid}>
+              {groupMonitors.map((monitor) => (
+                <section className={styles.chart} key={monitor.id}>
+                  <h3>{monitor.name}</h3>
+                  {state.latency[monitor.id]?.length ? (
+                    <DetailChart monitor={monitor} state={state} appearance="status" />
+                  ) : (
+                    <p>No response-time data yet.</p>
+                  )}
+                </section>
+              ))}
+            </div>
+          )}
+        </details>
+      </div>
+    </section>
   )
 }
 
@@ -175,20 +233,14 @@ export default function MarketMakerStatus({
           if (groupMonitors.length === 0) return null
 
           return (
-            <section className={styles.group} key={groupName} aria-labelledby={`group-${groupName}`}>
-              <h2 id={`group-${groupName}`}>{groupName}</h2>
-              <div className={styles.card}>
-                {groupMonitors.map((monitor) => (
-                  <MonitorRow
-                    key={monitor.id}
-                    monitor={monitor}
-                    state={state}
-                    maintenances={maintenances}
-                    now={now}
-                  />
-                ))}
-              </div>
-            </section>
+            <ProjectGroup
+              key={groupName}
+              groupName={groupName}
+              groupMonitors={groupMonitors}
+              state={state}
+              maintenances={maintenances}
+              now={now}
+            />
           )
         })}
 

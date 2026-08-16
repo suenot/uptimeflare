@@ -31,7 +31,7 @@
 
 .brand,
 .incidentsLink,
-.name a,
+.name span,
 .footer a {
   color: inherit;
   text-decoration: none;
@@ -66,8 +66,7 @@
 }
 
 .incidentsLink:hover,
-.footer a:hover,
-.name a:hover {
+.footer a:hover {
   text-decoration: underline;
 }
 
@@ -161,10 +160,88 @@
   font-weight: 500;
 }
 
-.name a {
+.name span {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.charts {
+  border-top: 1px solid var(--line);
+}
+
+.charts summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 16px;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  list-style: none;
+}
+
+.charts summary::-webkit-details-marker {
+  display: none;
+}
+
+.charts summary span:last-child {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.charts summary::after {
+  width: 7px;
+  height: 7px;
+  margin-left: 4px;
+  border-right: 1px solid var(--muted);
+  border-bottom: 1px solid var(--muted);
+  content: '';
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 180ms ease;
+}
+
+.charts[open] summary::after {
+  transform: rotate(225deg) translate(-2px, -2px);
+}
+
+.charts summary:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--up) 80%, white);
+  outline-offset: -4px;
+}
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.chart {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg) 36%, var(--panel));
+}
+
+.chart h3 {
+  margin: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chart p {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .meta {
@@ -255,5 +332,9 @@
 
   .meta {
     text-align: left;
+  }
+
+  .chartGrid {
+    grid-template-columns: 1fr;
   }
 }
