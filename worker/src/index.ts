@@ -39,8 +39,6 @@ const Worker = {
 
     // Update each monitor's state based on check results
     for (const monitor of workerConfig.monitors) {
-      console.log(`Processing monitor result: ${monitor.name} (${monitor.id})`)
-
       let monitorStatusChanged = false
       const { location: checkLocation, status } = checkResult[monitor.id]
 

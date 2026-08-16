@@ -38,6 +38,12 @@ resource "cloudflare_workers_script" "uptimeflare_worker" {
   compatibility_date  = "2025-04-02"
   compatibility_flags = ["nodejs_compat"]
 
+  # Thirty-seven external checks plus D1 state compaction can exceed the default
+  # scheduled-invocation CPU allowance. Keep enough headroom for a full run.
+  limits = {
+    cpu_ms = 120000
+  }
+
   observability = {
     enabled = true
     logs = {

@@ -321,7 +321,6 @@ export async function getStatus(
         },
       })
 
-      console.log(`${monitor.name} responded with ${response.status}`)
       status.ping = Date.now() - startTime
 
       const err = await httpResponseBasicCheck(
@@ -403,8 +402,6 @@ export async function doMonitor(monitor: MonitorTarget, defaultLocation: string,
     // Initiate a check from the current location
     status = await getStatus(monitor)
   }
-
-  console.log(`[${monitor.id}] Check result from ${checkLocation}: up=${status.up}, ping=${status.ping}, err=${status.err}`)
 
   return {
     location: checkLocation,

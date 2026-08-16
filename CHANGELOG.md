@@ -6,6 +6,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [0.3.4] - 2026-08-16
+
+### Fixed
+
+- Restored scheduled checks after Cloudflare reported `exceededCpu` and monitoring state became stale.
+
+### Changed
+
+- Raised the scheduled Worker's CPU budget to 120 seconds and removed routine per-check success logs.
+- Documented the CPU-overrun diagnosis in the monitoring runbook.
+
 ## [0.3.3] - 2026-08-16
 
 ### Fixed
@@ -66,7 +77,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 - Removed notification logging that could expose webhook URLs, headers, or payloads.
 
-[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.3.3...HEAD
+[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.3.4...HEAD
+[0.3.4]: https://github.com/suenot/uptimeflare/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/suenot/uptimeflare/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/suenot/uptimeflare/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/suenot/uptimeflare/compare/v0.3.0...v0.3.1
