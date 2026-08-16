@@ -2,7 +2,8 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 
 import { MonitorTarget } from '@/types/config'
-import { maintenances, pageConfig } from '@/uptime.config'
+import { maintenances, pageConfig } from '@/config/page'
+import { monitors as configuredMonitors } from '@/config/monitors'
 import { Center, Text } from '@mantine/core'
 import { useTranslation } from 'react-i18next'
 import { CompactedMonitorStateWrapper, getFromStore } from '@/worker/src/store'
@@ -57,12 +58,11 @@ export default function Home({
 }
 
 export async function getServerSideProps() {
-  const { workerConfig } = await import('@/uptime.config')
   // Read state as string from storage, to avoid hitting server-side cpu time limit
   const compactedStateStr = await getFromStore(process.env as any, 'state')
 
   // Only present these values to client
-  const monitors = workerConfig.monitors.map((monitor) => {
+  const monitors = configuredMonitors.map((monitor) => {
     return {
       id: monitor.id,
       name: monitor.name,

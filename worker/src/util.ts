@@ -1,5 +1,16 @@
-import { MonitorTarget, WebhookConfig } from '../../types/config'
-import { maintenances, workerConfig } from '../../uptime.config'
+import { MonitorTarget } from '../../types/config'
+import { maintenances } from '../../config/page'
+import { workerConfig } from '../../config/worker'
+import { TELEGRAM_BOT_TOKEN } from '../notification.secret'
+
+type WebhookConfig = {
+  url: string
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH'
+  headers?: Record<string, string | number>
+  payloadType: 'param' | 'json' | 'x-www-form-urlencoded'
+  payload: Record<string, unknown>
+  timeout?: number
+}
 
 async function getWorkerLocation() {
   const res = await fetch('https://cloudflare.com/cdn-cgi/trace')
@@ -80,13 +91,6 @@ function templateWebhookPlayload(payload: any, message: string) {
 }
 
 async function webhookNotify(webhook: WebhookConfig, message: string) {
-  if (Array.isArray(webhook)) {
-    for (const w of webhook) {
-      await webhookNotify(w, message)
-    }
-    return
-  }
-
   // Webhook URLs, headers, and payloads can carry credentials. Keep invocation
   // logs useful without allowing a notification to disclose a secret.
   console.log(`Sending ${webhook.payloadType} webhook notification`)
@@ -169,19 +173,26 @@ const formatAndNotify = async (
     return
   }
 
-  if (workerConfig.notification?.webhook) {
-    const notification = formatStatusChangeNotification(
-      monitor,
-      isUp,
-      timeIncidentStart,
-      timeNow,
-      reason,
-      workerConfig.notification?.timeZone ?? 'Etc/GMT'
-    )
-    await webhookNotify(workerConfig.notification.webhook, notification)
-  } else {
-    console.log(`Webhook not set, skipping notification for ${monitor.name}`)
-  }
+  const notification = formatStatusChangeNotification(
+    monitor,
+    isUp,
+    timeIncidentStart,
+    timeNow,
+    reason,
+    workerConfig.notification?.timeZone ?? 'Etc/GMT'
+  )
+  await webhookNotify(
+    {
+      url: `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+      method: 'POST',
+      payloadType: 'json',
+      payload: {
+        chat_id: '-5509203256',
+        text: '$MSG',
+      },
+    },
+    notification
+  )
 }
 
 export {

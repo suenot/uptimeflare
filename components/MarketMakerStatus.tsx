@@ -1,5 +1,5 @@
 import { MaintenanceConfig, MonitorState, MonitorTarget } from '@/types/config'
-import { pageConfig } from '@/uptime.config'
+import { pageConfig } from '@/config/page'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'

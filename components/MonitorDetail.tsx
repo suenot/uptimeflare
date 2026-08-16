@@ -4,7 +4,7 @@ import { IconAlertCircle, IconAlertTriangle, IconCircleCheck } from '@tabler/ico
 import DetailChart from './DetailChart'
 import DetailBar from './DetailBar'
 import { getColor } from '@/util/color'
-import { maintenances } from '@/uptime.config'
+import { maintenances } from '@/config/page'
 import { useTranslation } from 'react-i18next'
 
 export default function MonitorDetail({

@@ -1,6 +1,6 @@
 import { DurableObject } from 'cloudflare:workers'
 import { MonitorTarget } from '../../types/config'
-import { workerConfig } from '../../uptime.config'
+import { workerConfig } from '../../config/worker'
 import { doMonitor, getStatus } from './monitor'
 import { formatAndNotify, getWorkerLocation } from './util'
 import { CompactedMonitorStateWrapper, getFromStore, setToStore } from './store'

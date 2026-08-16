@@ -1,5 +1,5 @@
 import { Divider } from '@mantine/core'
-import { pageConfig } from '@/uptime.config'
+import { pageConfig } from '@/config/page'
 
 export default function Footer() {
   const defaultFooter =

@@ -1,5 +1,3 @@
-import type { Env } from '../worker/src'
-
 export type PageConfig = {
   title?: string
   links?: PageConfigLink[]
@@ -47,34 +45,21 @@ export type MonitorTarget = {
   checkProxyFallback?: boolean
 }
 
-export type WorkerConfig<TEnv = Env> = {
+export type WorkerConfig<TEnv = unknown> = {
   kvWriteCooldownMinutes?: number
-  passwordProtection?: string
   monitors: MonitorTarget[]
   notification?: Notification
   callbacks?: Callbacks<TEnv>
 }
 
 export type Notification = {
-  webhook?: WebhookConfig
   timeZone?: string
   gracePeriod?: number
   skipNotificationIds?: string[]
   skipErrorChangeNotification?: boolean
 }
 
-type SingleWebhook = {
-  url: string
-  method?: 'GET' | 'POST' | 'PUT' | 'PATCH'
-  headers?: { [key: string]: string | number }
-  payloadType: 'param' | 'json' | 'x-www-form-urlencoded'
-  payload: any
-  timeout?: number
-}
-
-export type WebhookConfig = SingleWebhook | SingleWebhook[]
-
-export type Callbacks<TEnv = Env> = {
+export type Callbacks<TEnv = unknown> = {
   onStatusChange?: (
     env: TEnv,
     monitor: MonitorTarget,

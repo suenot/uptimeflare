@@ -1,6 +1,6 @@
 import { Container, Group, Image } from '@mantine/core'
 import classes from '@/styles/Header.module.css'
-import { pageConfig } from '@/uptime.config'
+import { pageConfig } from '@/config/page'
 import { PageConfigLink } from '@/types/config'
 import { useTranslation } from 'react-i18next'
 

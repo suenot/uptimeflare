@@ -1,4 +1,5 @@
-import { maintenances, workerConfig } from '@/uptime.config'
+import { maintenances } from '@/config/page'
+import { monitors } from '@/config/monitors'
 import { NextRequest } from 'next/server'
 import { CompactedMonitorStateWrapper, getFromStore } from '@/worker/src/store'
 
@@ -25,7 +26,7 @@ export default async function handler(req: NextRequest): Promise<Response> {
 
   let monitors: any = {}
 
-  for (let monitor of workerConfig.monitors) {
+  for (let monitor of monitors) {
     const lastIncident = compactedState.getIncident(
       monitor.id,
       compactedState.incidentLen(monitor.id) - 1

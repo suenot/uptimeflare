@@ -3,7 +3,7 @@ import { Center, Container, Title, Collapse, Button, Box } from '@mantine/core'
 import { IconCircleCheck, IconAlertCircle, IconPlus, IconMinus } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
 import MaintenanceAlert from './MaintenanceAlert'
-import { pageConfig } from '@/uptime.config'
+import { pageConfig } from '@/config/page'
 import { useTranslation } from 'react-i18next'
 
 function useWindowVisibility() {

@@ -39,8 +39,8 @@ terraform.tfstate*
 
 /.wrangler
 
-# generated in CI from secret, never commit
-uptime.secret.ts
+# Generated in CI from a secret, never commit.
+worker/notification.secret.ts
 
 # local codebase graph generated for engineering analysis
 /graphify-out/

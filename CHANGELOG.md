@@ -6,6 +6,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-08-16
+
+### Changed
+
+- Separated public page settings, monitor targets and Worker behavior into dedicated configuration modules.
+- Added operational documentation for the scheduled Worker, D1 state, alert thresholds and freshness checks.
+
+### Security
+
+- Moved the Telegram token into a Worker-only module generated in CI so it cannot enter the browser-facing import graph.
+- Removed unused password-protection and full-example configuration files that encouraged unsafe secret placement.
+
 ## [0.3.1] - 2026-08-16
 
 ### Fixed
@@ -43,7 +55,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 - Removed notification logging that could expose webhook URLs, headers, or payloads.
 
-[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.3.2...HEAD
+[0.3.2]: https://github.com/suenot/uptimeflare/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/suenot/uptimeflare/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/suenot/uptimeflare/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/suenot/uptimeflare/compare/v0.2.0...v0.2.1

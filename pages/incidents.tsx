@@ -3,7 +3,8 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 import { MaintenanceConfig, MonitorTarget } from '@/types/config'
-import { maintenances, pageConfig } from '@/uptime.config'
+import { maintenances, pageConfig } from '@/config/page'
+import { monitors as configuredMonitors } from '@/config/monitors'
 import styles from '@/styles/IncidentsPage.module.css'
 
 export const runtime = 'experimental-edge'
@@ -169,8 +170,7 @@ export default function IncidentsPage({ monitors }: { monitors: MonitorTarget[] 
 }
 
 export async function getServerSideProps() {
-  const { workerConfig } = await import('@/uptime.config')
-  const monitors: MonitorTarget[] = workerConfig.monitors.map((monitor) => ({
+  const monitors: MonitorTarget[] = configuredMonitors.map((monitor) => ({
     id: monitor.id,
     name: monitor.name,
   })) as MonitorTarget[]

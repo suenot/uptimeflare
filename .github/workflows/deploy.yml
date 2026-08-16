@@ -11,9 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Generate secret config from GitHub secret (not committed to the repo)
-      - name: Generate secret config
-        run: echo "export const TELEGRAM_BOT_TOKEN = '${{ secrets.TELEGRAM_BOT_TOKEN }}';" > uptime.secret.ts
+      # Generate the Worker-only secret module. It is not committed and is not
+      # reachable from the browser-facing status-page import graph.
+      - name: Generate Worker notification secret
+        run: echo "export const TELEGRAM_BOT_TOKEN = '${{ secrets.TELEGRAM_BOT_TOKEN }}';" > worker/notification.secret.ts
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2.0.3
