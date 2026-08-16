@@ -18,11 +18,10 @@ const pageConfig: PageConfig = {
   group: {
     'MarketMaker platform': [
       'marketmaker-cc',
-      'terminal',
       'docs',
       'auth',
     ],
-    'Profitmaker.cc': ['profitmaker-api'],
+    'Profitmaker.cc': ['terminal', 'profitmaker-api'],
     'Trender Bot': ['trender', 'realtime', 'api-mm'],
     Backtester: ['backtests'],
     'Portfolio Optimizer': ['portfolio-optimizer'],
