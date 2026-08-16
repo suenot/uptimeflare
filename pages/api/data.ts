@@ -1,5 +1,5 @@
 import { maintenances } from '@/config/page'
-import { monitors } from '@/config/monitors'
+import { monitors as monitorConfigs } from '@/config/monitors'
 import { NextRequest } from 'next/server'
 import { CompactedMonitorStateWrapper, getFromStore } from '@/worker/src/store'
 
@@ -24,20 +24,30 @@ export default async function handler(req: NextRequest): Promise<Response> {
     })
   }
 
-  let monitors: any = {}
+  const monitorStates: Record<
+    string,
+    {
+      up: boolean
+      latency: number | null
+      location: string | null
+      message: string
+    }
+  > = {}
 
-  for (let monitor of monitors) {
-    const lastIncident = compactedState.getIncident(
-      monitor.id,
-      compactedState.incidentLen(monitor.id) - 1
-    )
+  for (const monitor of monitorConfigs) {
+    const incidentCount = compactedState.incidentLen(monitor.id)
+    const lastIncident = incidentCount
+      ? compactedState.getIncident(monitor.id, incidentCount - 1)
+      : undefined
 
     const isUp = lastIncident?.end !== null
-    const latency = compactedState.getLastLatency(monitor.id)
-    monitors[monitor.id] = {
+    const latency = compactedState.data.latency[monitor.id]
+      ? compactedState.getLastLatency(monitor.id)
+      : undefined
+    monitorStates[monitor.id] = {
       up: isUp,
-      latency: latency.ping,
-      location: latency.loc,
+      latency: latency?.ping ?? null,
+      location: latency?.loc ?? null,
       message: isUp ? 'OK' : lastIncident?.error[lastIncident.error.length - 1],
     }
   }
@@ -46,7 +56,7 @@ export default async function handler(req: NextRequest): Promise<Response> {
     up: compactedState.data.overallUp,
     down: compactedState.data.overallDown,
     updatedAt: compactedState.data.lastUpdate,
-    monitors,
+    monitors: monitorStates,
     maintenances,
   }
 

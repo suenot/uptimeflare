@@ -6,6 +6,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [0.3.3] - 2026-08-16
+
+### Fixed
+
+- Restored the public `/api/data` endpoint after a configuration import was shadowed by its response object.
+- Returned safe null latency values when a monitor has not yet stored a response-time record.
+
+### Changed
+
+- Updated the production monitoring guide for separated public, monitor and Worker configuration modules.
+
 ## [0.3.2] - 2026-08-16
 
 ### Changed
@@ -55,7 +66,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 - Removed notification logging that could expose webhook URLs, headers, or payloads.
 
-[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.3.2...HEAD
+[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.3.3...HEAD
+[0.3.3]: https://github.com/suenot/uptimeflare/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/suenot/uptimeflare/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/suenot/uptimeflare/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/suenot/uptimeflare/compare/v0.2.1...v0.3.0
