@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       manual-trigger:
-        description: 'This will pull the upstream code while preserving your configuration file. Configuration file compatibility is not guaranteed, and you may need to manually update the configuration file after pulling.'
+        description: 'This merges upstream into the fork and stops on a conflict. Resolve conflicts before rerunning; it never deletes MarketMaker customizations.'
         type: boolean
         required: true
         default: false
@@ -27,27 +27,27 @@ jobs:
         with:
           token: ${{ inputs.override-token || secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
 
-      - name: Current config
-        run: |
-          cat uptime.config.ts
-          cp uptime.config.ts /tmp/origin.config.ts
-
       - name: Sync upstream changes
         id: sync
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Fetch latest code
-          git clone https://github.com/lyc8503/UptimeFlare /tmp/latest
-          rm -rf /tmp/latest/.git
+          git remote add upstream https://github.com/lyc8503/UptimeFlare.git 2>/dev/null || true
+          git fetch upstream main
 
-          # Clean current repo and update
-          git rm -rf '*'
-          cp -r /tmp/latest/. .
-          cp /tmp/origin.config.ts uptime.config.ts
-          git add .
-          git commit -m "Sync latest code from upstream"
+          if ! git merge --no-commit --no-ff upstream/main; then
+            git merge --abort
+            echo "Upstream conflicts with MarketMaker customizations. Resolve locally and push a reviewed merge."
+            exit 1
+          fi
+
+          if git diff --quiet; then
+            echo "Already up to date."
+            exit 0
+          fi
+
+          git commit -am "chore: sync upstream UptimeFlare"
           git push
 
       - name: Trigger deployment

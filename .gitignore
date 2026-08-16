@@ -41,3 +41,6 @@ terraform.tfstate*
 
 # generated in CI from secret, never commit
 uptime.secret.ts
+
+# local codebase graph generated for engineering analysis
+/graphify-out/

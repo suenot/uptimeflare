@@ -87,9 +87,9 @@ async function webhookNotify(webhook: WebhookConfig, message: string) {
     return
   }
 
-  console.log(
-    'Sending webhook notification: ' + JSON.stringify(message) + ' to webhook ' + webhook.url
-  )
+  // Webhook URLs, headers, and payloads can carry credentials. Keep invocation
+  // logs useful without allowing a notification to disclose a secret.
+  console.log(`Sending ${webhook.payloadType} webhook notification`)
   try {
     let url = webhook.url
     let method = webhook.method
@@ -127,22 +127,15 @@ async function webhookNotify(webhook: WebhookConfig, message: string) {
         throw 'Unrecognized payload type: ' + webhook.payloadType
     }
 
-    console.log(
-      `Webhook finalized parameters: ${method} ${url}, headers ${JSON.stringify(
-        Object.fromEntries(headers.entries())
-      )}, body ${JSON.stringify(body)}`
-    )
     const resp = await fetchTimeout(url, webhook.timeout ?? 5000, { method, headers, body })
 
     if (!resp.ok) {
-      console.log(
-        'Error calling webhook server, code: ' + resp.status + ', response: ' + (await resp.text())
-      )
+      console.log('Webhook notification failed, status: ' + resp.status)
     } else {
       console.log('Webhook notification sent successfully, code: ' + resp.status)
     }
   } catch (e) {
-    console.log('Error calling webhook server: ' + e)
+    console.log('Webhook notification failed before a response was received')
   }
 }
 
