@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-08-16
+
+### Fixed
+
+- Restyled the incident-history page with the MarketMaker status-page system and removed the upstream UptimeFlare footer.
+
 ## [0.2.0] - 2026-08-16
 
 ### Added
@@ -21,5 +27,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 - Removed notification logging that could expose webhook URLs, headers, or payloads.
 
-[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/suenot/uptimeflare/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/suenot/uptimeflare/releases/tag/v0.2.0
