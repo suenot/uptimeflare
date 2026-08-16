@@ -21,7 +21,7 @@ This separation prevents the notification token from entering the browser-facing
 
 The checker runs every minute. A one-minute grace period means an endpoint must fail twice before a down alert is sent. A recovery alert is sent after the endpoint responds successfully again. Maintenance windows suppress notifications for their listed monitor IDs.
 
-The Worker has a 120-second CPU budget. This covers the full batch of external checks and D1 compaction. Per-check success logs are intentionally omitted so routine monitoring does not spend its budget on logging.
+The Worker runs on the Cloudflare Free plan. Per-check success logs are intentionally omitted, and response-time history begins a fresh 12-hour window instead of trimming compacted records one by one. That keeps routine checks within the available CPU budget. Incident history is unaffected.
 
 ## Freshness check
 
@@ -33,7 +33,7 @@ curl -fsS https://status.marketmaker.cc/api/data
 
 `updatedAt` should be no more than a few minutes old. If it is stale, inspect the scheduled Worker deployment, its cron trigger and the D1 binding before assuming that a green page means the services are healthy.
 
-When the cron trigger exists but freshness still fails, check Workers Analytics for `exceededCpu`. Deploy the current `main` branch before changing the schedule or the database.
+When the cron trigger exists but freshness still fails, check Workers Analytics for `exceededCpu`. Deploy the current `main` branch before changing the schedule or the database. Do not add paid-plan CPU limits to the Free-plan Worker.
 
 ## Safe incident test
 

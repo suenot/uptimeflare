@@ -6,6 +6,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [0.3.5] - 2026-08-16
+
+### Fixed
+
+- Kept scheduled monitoring within the Free-plan CPU budget by starting a fresh short-term latency window instead of slicing every monitor history on each expiry.
+
+### Changed
+
+- Removed the paid-plan CPU-limit setting so the production deploy works on the current Cloudflare plan.
+
 ## [0.3.4] - 2026-08-16
 
 ### Fixed
@@ -77,7 +87,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 - Removed notification logging that could expose webhook URLs, headers, or payloads.
 
-[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.3.4...HEAD
+[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.3.5...HEAD
+[0.3.5]: https://github.com/suenot/uptimeflare/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/suenot/uptimeflare/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/suenot/uptimeflare/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/suenot/uptimeflare/compare/v0.3.1...v0.3.2

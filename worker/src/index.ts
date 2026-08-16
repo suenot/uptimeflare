@@ -24,6 +24,21 @@ const Worker = {
     let statusChanged = false
     const currentTimeSecond = Math.round(Date.now() / 1000)
 
+    // Keeping a sliding window by slicing every monitor's compacted strings is
+    // too CPU-expensive on the Free plan once the first 12-hour window expires.
+    // Response-time charts are intentionally short-term, so begin a fresh
+    // window instead. Incident history remains untouched.
+    const latencyRetentionSeconds = 12 * 60 * 60
+    const hasExpiredLatency = Object.keys(state.data.latency).some(
+      (monitorId) =>
+        state.latencyLen(monitorId) > 0 &&
+        state.getFirstLatency(monitorId).time < currentTimeSecond - latencyRetentionSeconds
+    )
+    if (hasExpiredLatency) {
+      console.log('Starting a fresh response-time history window')
+      state.data.latency = {}
+    }
+
     // Parallel check multiple monitors
     // Max concurrent connection is 6 limited by Cloudflare Workers, we use 5 here to be safe
     type CheckResult = { id: string; location: string; status: { ping: number; up: boolean; err: string } }
@@ -198,11 +213,6 @@ const Worker = {
         ping: status.ping,
         time: currentTimeSecond,
       })
-
-      // discard old data
-      while (state.getFirstLatency(monitor.id).time < currentTimeSecond - 12 * 60 * 60) {
-        state.unshiftLatency(monitor.id)
-      }
 
       // discard old incidents
       while (
