@@ -24,19 +24,15 @@ const Worker = {
     let statusChanged = false
     const currentTimeSecond = Math.round(Date.now() / 1000)
 
-    // Keeping a sliding window by slicing every monitor's compacted strings is
-    // too CPU-expensive on the Free plan once the first 12-hour window expires.
-    // Response-time charts are intentionally short-term, so begin a fresh
-    // window instead. Incident history remains untouched.
+    // Re-parsing and re-serializing the full state every minute is the main
+    // CPU cost on the Free plan, so the latency history must stay small:
+    // keep one sample per latencySampleSeconds within a 12-hour window
+    // instead of recording every check. This also downsamples any oversized
+    // legacy state on the first run after deploy. Incident history is untouched.
     const latencyRetentionSeconds = 12 * 60 * 60
-    const hasExpiredLatency = Object.keys(state.data.latency).some(
-      (monitorId) =>
-        state.latencyLen(monitorId) > 0 &&
-        state.getFirstLatency(monitorId).time < currentTimeSecond - latencyRetentionSeconds
-    )
-    if (hasExpiredLatency) {
-      console.log('Starting a fresh response-time history window')
-      state.data.latency = {}
+    const latencySampleSeconds = 5 * 60
+    for (const monitor of workerConfig.monitors) {
+      state.thinLatency(monitor.id, latencySampleSeconds, currentTimeSecond - latencyRetentionSeconds)
     }
 
     // Parallel check multiple monitors
@@ -207,12 +203,12 @@ const Worker = {
         }
       }
 
-      // append to latency data
-      state.appendLatency(monitor.id, {
-        loc: checkLocation,
-        ping: status.ping,
-        time: currentTimeSecond,
-      })
+      // append to latency data (one sample per window, refreshed in place)
+      state.recordLatency(
+        monitor.id,
+        { loc: checkLocation, ping: status.ping, time: currentTimeSecond },
+        latencySampleSeconds
+      )
 
       // discard old incidents
       while (

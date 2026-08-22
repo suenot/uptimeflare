@@ -6,6 +6,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [0.3.6] - 2026-08-22
+
+### Fixed
+
+- Unwedged scheduled monitoring after the state blob grew past the Free-plan CPU limit and every cron run failed with `exceededResources`: response-time history now keeps one sample per 5-minute window (refreshed in place) within the 12-hour window, and the first run downsamples any oversized stored state.
+
+### Changed
+
+- Capped response-time history at 200 points per monitor so the state blob stays bounded regardless of future retention changes.
+
 ## [0.3.5] - 2026-08-16
 
 ### Fixed
@@ -87,7 +97,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 - Removed notification logging that could expose webhook URLs, headers, or payloads.
 
-[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.3.5...HEAD
+[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.3.6...HEAD
+[0.3.6]: https://github.com/suenot/uptimeflare/compare/v0.3.5...v0.3.6
 [0.3.5]: https://github.com/suenot/uptimeflare/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/suenot/uptimeflare/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/suenot/uptimeflare/compare/v0.3.2...v0.3.3

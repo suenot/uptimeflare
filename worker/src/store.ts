@@ -211,6 +211,119 @@ export class CompactedMonitorStateWrapper {
     }
   }
 
+  // Keep one latency sample per sampleSeconds window; within a window,
+  // refresh the latest reading in place so the page always shows the current
+  // ping without growing the history on every check.
+  recordLatency(monitorId: string, record: LatencyRecord, sampleSeconds: number) {
+    if (this.latencyLen(monitorId) > 0) {
+      const last = this.getLastLatency(monitorId)
+      // Allow 10 seconds of clock drift, like the state write cooldown
+      if (record.time - last.time < sampleSeconds - 10) {
+        this.updateLastLatency(monitorId, record)
+        return
+      }
+    }
+    this.appendLatency(monitorId, record)
+  }
+
+  // Overwrite the latest history point with a fresher reading from the same
+  // sample window, without changing the number of stored points.
+  updateLastLatency(monitorId: string, record: LatencyRecord) {
+    const latencies = this.data.latency[monitorId]
+    if (!latencies || this.latencyLen(monitorId) === 0) return
+
+    // @ts-expect-error
+    const timeHex = new Uint8Array(new Uint32Array([record.time]).buffer).toHex()
+    // @ts-expect-error
+    const pingHex = new Uint8Array(new Uint16Array([record.ping]).buffer).toHex()
+    latencies.time = latencies.time.slice(0, -8) + timeHex
+    latencies.ping = latencies.ping.slice(0, -4) + pingHex
+
+    const lastIndex = latencies.loc.v.length - 1
+    if (latencies.loc.v[lastIndex] !== record.loc) {
+      latencies.loc.c[lastIndex] -= 1
+      if (latencies.loc.c[lastIndex] === 0) {
+        latencies.loc.c.pop()
+        latencies.loc.v.pop()
+      }
+      latencies.loc.c.push(1)
+      latencies.loc.v.push(record.loc)
+    }
+  }
+
+  // Thin the latency history so the state blob stays within the Free-plan CPU
+  // budget: keep at most one point per sampleSeconds, drop points older than
+  // minTime and cap the per-monitor point count. Also downsamples a state
+  // that grew under an older version, unwedging it on the next run.
+  thinLatency(monitorId: string, sampleSeconds: number, minTime: number) {
+    const latencies = this.data.latency[monitorId]
+    if (!latencies) return
+    const count = this.latencyLen(monitorId)
+    if (count === 0) return
+
+    // @ts-expect-error
+    const timeArr = new Uint32Array(Uint8Array.fromHex(latencies.time).buffer)
+    // @ts-expect-error
+    const pingArr = new Uint16Array(Uint8Array.fromHex(latencies.ping).buffer)
+    const locs: string[] = []
+    latencies.loc.c.forEach((c, index) => {
+      for (let i = 0; i < c; i++) locs.push(latencies.loc.v[index])
+    })
+
+    // Walk from the newest point, keeping points spaced at least
+    // sampleSeconds apart and dropping everything older than minTime.
+    const keptTime: number[] = []
+    const keptPing: number[] = []
+    const keptLoc: string[] = []
+    let lastKeptTime = Infinity
+    for (let i = count - 1; i >= 0; i--) {
+      const time = timeArr[i]
+      if (time < minTime) break
+      if (lastKeptTime - time >= sampleSeconds) {
+        keptTime.push(time)
+        keptPing.push(pingArr[i])
+        keptLoc.push(locs[i])
+        lastKeptTime = time
+      }
+    }
+
+    // Hard cap so the blob stays bounded even if the window grows later
+    const maxPoints = 200
+    if (keptTime.length > maxPoints) {
+      keptTime.length = maxPoints
+      keptPing.length = maxPoints
+      keptLoc.length = maxPoints
+    }
+
+    if (keptTime.length === 0) {
+      delete this.data.latency[monitorId]
+      return
+    }
+
+    const timeHex: string[] = []
+    const pingHex: string[] = []
+    for (let i = keptTime.length - 1; i >= 0; i--) {
+      // @ts-expect-error
+      timeHex.push(new Uint8Array(new Uint32Array([keptTime[i]]).buffer).toHex())
+      // @ts-expect-error
+      pingHex.push(new Uint8Array(new Uint16Array([keptPing[i]]).buffer).toHex())
+    }
+    latencies.time = timeHex.join('')
+    latencies.ping = pingHex.join('')
+
+    const loc: { v: string[]; c: number[] } = { v: [], c: [] }
+    for (let i = keptLoc.length - 1; i >= 0; i--) {
+      const value = keptLoc[i]
+      if (loc.v[loc.v.length - 1] !== value) {
+        loc.v.push(value)
+        loc.c.push(1)
+      } else {
+        loc.c[loc.c.length - 1] += 1
+      }
+    }
+    latencies.loc = loc
+  }
+
   getFirstLatency(monitorId: string): LatencyRecord {
     let latencies = this.data.latency[monitorId]
 

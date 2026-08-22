@@ -21,7 +21,7 @@ This separation prevents the notification token from entering the browser-facing
 
 The checker runs every minute. A one-minute grace period means an endpoint must fail twice before a down alert is sent. A recovery alert is sent after the endpoint responds successfully again. Maintenance windows suppress notifications for their listed monitor IDs.
 
-The Worker runs on the Cloudflare Free plan. Per-check success logs are intentionally omitted, and response-time history begins a fresh 12-hour window instead of trimming compacted records one by one. That keeps routine checks within the available CPU budget. Incident history is unaffected.
+The Worker runs on the Cloudflare Free plan. Per-check success logs are intentionally omitted. Response-time history keeps one sample per 5-minute window (refreshed in place) within a 12-hour retention window and a 200-point-per-monitor cap, instead of recording every check. Re-parsing and re-serializing the state every minute is the dominant CPU cost, so the bounded history keeps routine checks within the available CPU budget, and the first run after any growth downsamples an oversized state automatically. Incident history is unaffected.
 
 ## Freshness check
 
