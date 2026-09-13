@@ -9,6 +9,7 @@ export const pageConfig: PageConfig = {
   // stay in their own group rather than being misrepresented as public products.
   group: {
     'MarketMaker platform': ['marketmaker-cc', 'docs', 'auth'],
+    'Little Signals': ['curves'],
     'Profitmaker.cc': ['terminal', 'profitmaker-api'],
     'Trender Bot': ['trender', 'realtime', 'api-mm'],
     Backtester: ['backtests'],

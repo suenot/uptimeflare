@@ -3,6 +3,7 @@ import type { MonitorTarget } from '../types/config'
 export const monitors: MonitorTarget[] = [
     // ===== Website =====
     { id: 'marketmaker-cc', name: 'marketmaker.cc', method: 'GET', target: 'https://marketmaker.cc' },
+    { id: 'curves', name: 'curves.marketmaker.cc', method: 'GET', target: 'https://curves.marketmaker.cc' },
     { id: 'terminal', name: 'terminal.marketmaker.cc', method: 'GET', target: 'https://terminal.marketmaker.cc' },
     { id: 'trender', name: 'trender.marketmaker.cc', method: 'GET', target: 'https://trender.marketmaker.cc' },
     { id: 'warehouse', name: 'warehouse.marketmaker.cc', method: 'GET', target: 'https://warehouse.marketmaker.cc' },

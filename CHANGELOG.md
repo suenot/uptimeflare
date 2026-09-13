@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-13
+
+### Added
+
+- Added public availability monitoring for the Little Signals game at `curves.marketmaker.cc`.
+
 ## [0.3.6] - 2026-08-22
 
 ### Fixed
@@ -97,7 +103,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 - Removed notification logging that could expose webhook URLs, headers, or payloads.
 
-[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.3.6...HEAD
+[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/suenot/uptimeflare/compare/v0.3.6...v0.4.0
 [0.3.6]: https://github.com/suenot/uptimeflare/compare/v0.3.5...v0.3.6
 [0.3.5]: https://github.com/suenot/uptimeflare/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/suenot/uptimeflare/compare/v0.3.3...v0.3.4
