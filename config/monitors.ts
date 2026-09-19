@@ -18,6 +18,7 @@ export const monitors: MonitorTarget[] = [
     { id: 'listingapis-app', name: 'app.listingapis.com', method: 'GET', target: 'https://app.listingapis.com' },
 
     // ===== API =====
+    { id: 'languages', name: 'languages.marketmaker.cc', method: 'GET', target: 'https://languages.marketmaker.cc/health' },
     { id: 'profitmaker-api', name: 'profitmaker-api.marketmaker.cc', method: 'GET', target: 'https://profitmaker-api.marketmaker.cc/health' },
     { id: 'auth', name: 'auth.marketmaker.cc', method: 'GET', target: 'https://auth.marketmaker.cc/health' },
     { id: 'listingapis-api', name: 'api.listingapis.com', method: 'GET', target: 'https://api.listingapis.com/api/health' },

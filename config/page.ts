@@ -36,6 +36,7 @@ export const pageConfig: PageConfig = {
       'harness-analyzer-api',
       'content',
       'backups',
+      'languages',
     ],
     'Platform infrastructure': ['gitlab', 'npm'],
     'External dependency': ['auth-a8e'],
