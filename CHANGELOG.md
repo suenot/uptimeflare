@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-09-23
+
+### Fixed
+
+- Avoided rebuilding every monitor's latency history on each scheduled check, reducing CPU use that caused Free-plan Worker executions to exceed their limit.
+
 ## [0.5.0] - 2026-09-19
 
 ### Added
@@ -109,7 +115,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 - Removed notification logging that could expose webhook URLs, headers, or payloads.
 
-[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/suenot/uptimeflare/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/suenot/uptimeflare/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/suenot/uptimeflare/compare/v0.3.6...v0.4.0
 [0.3.6]: https://github.com/suenot/uptimeflare/compare/v0.3.5...v0.3.6

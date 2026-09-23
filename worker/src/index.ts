@@ -25,7 +25,8 @@ const Worker = {
     const currentTimeSecond = Math.round(Date.now() / 1000)
 
     // Re-parsing and re-serializing the full state every minute is the main
-    // CPU cost on the Free plan, so the latency history must stay small:
+    // CPU cost on the Free plan. thinLatency skips histories that are already
+    // within the retention window and cap, so only expired data is rebuilt:
     // keep one sample per latencySampleSeconds within a 12-hour window
     // instead of recording every check. This also downsamples any oversized
     // legacy state on the first run after deploy. Incident history is untouched.

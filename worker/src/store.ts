@@ -261,6 +261,10 @@ export class CompactedMonitorStateWrapper {
     const count = this.latencyLen(monitorId)
     if (count === 0) return
 
+    // Most runs only refresh the newest point. Avoid decoding and rebuilding
+    // every monitor's full history until a point expires or the cap is reached.
+    if (count <= 200 && this.getFirstLatency(monitorId).time >= minTime) return
+
     // @ts-expect-error
     const timeArr = new Uint32Array(Uint8Array.fromHex(latencies.time).buffer)
     // @ts-expect-error
