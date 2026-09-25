@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-09-25
+
+### Added
+
+- Added a public health check and a separate status-page group for News Warehouse.
+
 ## [0.5.1] - 2026-09-23
 
 ### Fixed
@@ -115,7 +121,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 - Removed notification logging that could expose webhook URLs, headers, or payloads.
 
-[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/suenot/uptimeflare/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/suenot/uptimeflare/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/suenot/uptimeflare/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/suenot/uptimeflare/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/suenot/uptimeflare/compare/v0.3.6...v0.4.0

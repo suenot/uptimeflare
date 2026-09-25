@@ -17,6 +17,7 @@ export const pageConfig: PageConfig = {
     Arena: ['arena'],
     'ListingAPIs.com': ['listingapis', 'listingapis-app', 'listingapis-api'],
     'Crypto Warehouse': ['warehouse', 'warehouse-api'],
+    'News Warehouse': ['news-warehouse'],
     'Kimchi Premium Screener': ['kimchi-backend'],
     'MarketMaker Sandbox': ['sandbox-api'],
     'Trading Events Calendar': ['events'],
