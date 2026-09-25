@@ -11,10 +11,11 @@ export interface Env {
   UPTIMEFLARE_D1: D1Database
 }
 
+type CheckResult = { id: string; location: string; status: { ping: number; up: boolean; err: string } }
+
 const Worker = {
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
-    const workerLocation = (await getWorkerLocation()) || 'ERROR'
-    console.log(`Running scheduled event on ${workerLocation}...`)
+    console.log('Running scheduled event...')
 
     // Create a wrapped MonitorState from stored compacted state
     const state = new CompactedMonitorStateWrapper(await getFromStore(env, 'state'))
@@ -24,9 +25,8 @@ const Worker = {
     let statusChanged = false
     const currentTimeSecond = Math.round(Date.now() / 1000)
 
-    // Re-parsing and re-serializing the full state every minute is the main
-    // CPU cost on the Free plan. thinLatency skips histories that are already
-    // within the retention window and cap, so only expired data is rebuilt:
+    // Keep latency history bounded. thinLatency skips histories that are
+    // already within the retention window and cap, so only expired data is rebuilt:
     // keep one sample per latencySampleSeconds within a 12-hour window
     // instead of recording every check. This also downsamples any oversized
     // legacy state on the first run after deploy. Incident history is untouched.
@@ -36,16 +36,23 @@ const Worker = {
       state.thinLatency(monitor.id, latencySampleSeconds, currentTimeSecond - latencyRetentionSeconds)
     }
 
-    // Parallel check multiple monitors
-    // Max concurrent connection is 6 limited by Cloudflare Workers, we use 5 here to be safe
-    type CheckResult = { id: string; location: string; status: { ping: number; up: boolean; err: string } }
-    let checkQueue: Promise<CheckResult>[] = []
-    let checkResult: Record<string, CheckResult> = {};
-    const limit = pLimit(5);
-    for (const monitor of workerConfig.monitors) {
-      checkQueue.push(limit(() => doMonitor(monitor, workerLocation, env)))
+    // Keep the cron invocation below the Free-plan CPU limit by running checks
+    // in small batches on the existing Durable Object binding. A failed batch
+    // rejects the run, so incomplete results cannot create false down alerts.
+    const batchSize = 10
+    const batches: MonitorTarget[][] = []
+    for (let i = 0; i < workerConfig.monitors.length; i += batchSize) {
+      batches.push(workerConfig.monitors.slice(i, i + batchSize))
     }
-    for (const result of await Promise.all(checkQueue)) {
+    const batchResults = await Promise.all(
+      batches.map((monitors, index) =>
+        env.REMOTE_CHECKER_DO.get(
+          env.REMOTE_CHECKER_DO.idFromName(`scheduled-batch-${index}`)
+        ).getStatuses(monitors)
+      )
+    )
+    const checkResult: Record<string, CheckResult> = {}
+    for (const result of batchResults.flat()) {
       checkResult[result.id] = result
     }
 
@@ -258,8 +265,24 @@ const Worker = {
 export default Worker
 
 export class RemoteChecker extends DurableObject {
+  private readonly workerEnv: Env
+
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env)
+    this.workerEnv = env
+  }
+
+  async getStatuses(monitors: MonitorTarget[]): Promise<CheckResult[]> {
+    const location = (await getWorkerLocation()) || 'ERROR'
+    // Each object runs at most five outgoing checks at once, below the six
+    // simultaneous connection limit. Two waves of eight-second timeouts also
+    // stay within the Free-plan Durable Object duration quota during outages.
+    const limit = pLimit(5)
+    return Promise.all(
+      monitors.map((monitor) =>
+        limit(() => doMonitor({ ...monitor, timeout: monitor.timeout ?? 8000 }, location, this.workerEnv))
+      )
+    )
   }
 
   async getLocationAndStatus(
