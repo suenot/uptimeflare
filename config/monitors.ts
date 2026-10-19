@@ -25,7 +25,6 @@ export const monitors: MonitorTarget[] = [
     { id: 'kimchi-backend', name: 'kimchi (backend)', method: 'GET', target: 'https://kimchi.marketmaker.cc/healthz' },
     { id: 'warehouse-api', name: 'warehouse (backend API)', method: 'GET', target: 'https://warehouse.marketmaker.cc/api/v1/health' },
     { id: 'news-warehouse', name: 'news-warehouse.marketmaker.cc', method: 'GET', target: 'https://news-warehouse.marketmaker.cc/health' },
-    { id: 'caribbean-news-api', name: 'caribbean-news-api.marketmaker.cc', method: 'GET', target: 'https://caribbean-news-api.marketmaker.cc/health' },
     { id: 'backups', name: 'backups.marketmaker.cc', method: 'GET', target: 'https://backups.marketmaker.cc/health' },
     { id: 'solver', name: 'solver.marketmaker.cc', method: 'GET', target: 'https://solver.marketmaker.cc/health' },
     { id: 'crm', name: 'crm.marketmaker.cc', method: 'GET', target: 'https://crm.marketmaker.cc/api/health' },

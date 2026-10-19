@@ -35,7 +35,6 @@ export const pageConfig: PageConfig = {
       'metrics',
       'visual',
       'harness-analyzer-api',
-      'caribbean-news-api',
       'content',
       'backups',
       'languages',
