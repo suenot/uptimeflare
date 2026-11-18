@@ -14,8 +14,8 @@ export const monitors: MonitorTarget[] = [
     { id: 'asdf', name: 'asdf.marketmaker.cc', method: 'GET', target: 'https://asdf.marketmaker.cc' },
     { id: 'gpu', name: 'gpu.marketmaker.cc', method: 'GET', target: 'https://gpu.marketmaker.cc' },
     { id: 'pocket', name: 'pocket.marketmaker.cc', method: 'GET', target: 'https://pocket.marketmaker.cc' },
-    { id: 'listingapis', name: 'listingapis.com', method: 'GET', target: 'https://listingapis.com' },
-    { id: 'listingapis-app', name: 'app.listingapis.com', method: 'GET', target: 'https://app.listingapis.com' },
+    { id: 'listingapis', name: 'listingapis.com', method: 'GET', target: 'https://www.listingapis.com/robots.txt' },
+    { id: 'listingapis-app', name: 'app.listingapis.com', method: 'GET', target: 'https://app.listingapis.com/favicon.ico' },
 
     // ===== API =====
     { id: 'languages', name: 'languages.marketmaker.cc', method: 'GET', target: 'https://languages.marketmaker.cc/health' },
