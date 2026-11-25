@@ -35,7 +35,7 @@ export const monitors: MonitorTarget[] = [
     { id: 'gpu-api', name: 'gpu-api.marketmaker.cc', method: 'GET', target: 'https://gpu-api.marketmaker.cc/health' },
     { id: 'harness-analyzer-api', name: 'harness-analyzer-api.marketmaker.cc', method: 'GET', target: 'https://harness-analyzer-api.marketmaker.cc/api/status' },
     { id: 'sandbox-api', name: 'sandbox-api.marketmaker.cc', method: 'GET', target: 'https://sandbox-api.marketmaker.cc/readyz' },
-    { id: 'arena', name: 'arena.marketmaker.cc', method: 'GET', target: 'https://arena.marketmaker.cc/api/v1/health' },
+    { id: 'arena', name: 'arena.marketmaker.cc', method: 'GET', target: 'https://arena-api.marketmaker.cc/api/v1/health' },
 
     // ===== API (verify-at-deploy) =====
     // Service alive but root has no route (uvicorn 404)
