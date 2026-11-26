@@ -33,6 +33,7 @@ export const monitors: MonitorTarget[] = [
     { id: 'metrics', name: 'metrics.marketmaker.cc', method: 'GET', target: 'https://metrics.marketmaker.cc/api/health' },
     { id: 'visual', name: 'visual.marketmaker.cc', method: 'GET', target: 'https://visual.marketmaker.cc/api/health' },
     { id: 'gpu-api', name: 'gpu-api.marketmaker.cc', method: 'GET', target: 'https://gpu-api.marketmaker.cc/health' },
+    { id: 'infra', name: 'infra.marketmaker.cc', method: 'GET', target: 'https://infra.marketmaker.cc/healthz' },
     { id: 'harness-analyzer-api', name: 'harness-analyzer-api.marketmaker.cc', method: 'GET', target: 'https://harness-analyzer-api.marketmaker.cc/api/status' },
     { id: 'sandbox-api', name: 'sandbox-api.marketmaker.cc', method: 'GET', target: 'https://sandbox-api.marketmaker.cc/readyz' },
     { id: 'arena', name: 'arena.marketmaker.cc', method: 'GET', target: 'https://arena-api.marketmaker.cc/api/v1/health' },

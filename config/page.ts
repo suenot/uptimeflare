@@ -39,7 +39,7 @@ export const pageConfig: PageConfig = {
       'backups',
       'languages',
     ],
-    'Platform infrastructure': ['gitlab', 'npm'],
+    'Platform infrastructure': ['gitlab', 'npm', 'infra'],
     'External dependency': ['auth-a8e'],
   },
 }
